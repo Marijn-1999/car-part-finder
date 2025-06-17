@@ -2,7 +2,13 @@
 import { Button } from '@/components/ui/button';
 import { Bell, Settings, User } from 'lucide-react';
 
-export const Header = () => {
+interface HeaderProps {
+  onNotifications: () => void;
+  onProfile: () => void;
+  onSettings: () => void;
+}
+
+export const Header = ({ onNotifications, onProfile, onSettings }: HeaderProps) => {
   return (
     <header className="bg-green-600 text-white shadow-lg">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -15,13 +21,28 @@ export const Header = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-white hover:bg-green-700">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-white hover:bg-green-700"
+            onClick={onNotifications}
+          >
             <Bell className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-green-700">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-white hover:bg-green-700"
+            onClick={onSettings}
+          >
             <Settings className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-green-700">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-white hover:bg-green-700"
+            onClick={onProfile}
+          >
             <User className="h-4 w-4" />
           </Button>
         </div>

@@ -5,13 +5,19 @@ import { SearchResults } from '@/components/SearchResults';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { UserPreferences } from '@/components/UserPreferences';
+import { NotificationsPanel } from '@/components/NotificationsPanel';
+import { PartDetailsModal } from '@/components/PartDetailsModal';
 import { Settings, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const [showPreferences, setShowPreferences] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [selectedPartId, setSelectedPartId] = useState<number | null>(null);
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chat' | 'search'>('chat');
 
   const handleSearch = async (query: string) => {
     setIsSearching(true);
@@ -54,9 +60,42 @@ const Index = () => {
     }, 2000);
   };
 
+  const handleExternalLink = (platform: string) => {
+    const platformUrls = {
+      'Marktplaats': 'https://www.marktplaats.nl',
+      'eBay': 'https://www.ebay.com',
+      'AutoScout24': 'https://www.autoscout24.com',
+      'Classic & Sports Car': 'https://www.classicdriver.com',
+      'Oldtimerteile': 'https://www.oldtimerteile.de'
+    };
+    
+    const url = platformUrls[platform as keyof typeof platformUrls] || 'https://www.google.com';
+    window.open(url, '_blank');
+  };
+
+  const handleShowDetails = (partId: number) => {
+    setSelectedPartId(partId);
+  };
+
+  const handleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  const handleProfile = () => {
+    setShowProfile(!showProfile);
+  };
+
+  const handleSettings = () => {
+    setShowPreferences(!showPreferences);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
-      <Header />
+      <Header 
+        onNotifications={handleNotifications}
+        onProfile={handleProfile}
+        onSettings={handleSettings}
+      />
       
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="text-center mb-8">
@@ -80,18 +119,26 @@ const Index = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowPreferences(!showPreferences)}
+                  onClick={handleSettings}
                   className="text-green-600 hover:text-green-800"
                 >
                   <Settings className="h-4 w-4" />
                 </Button>
               </div>
               <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start text-sm">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start text-sm"
+                  onClick={handleNotifications}
+                >
                   <Bell className="h-4 w-4 mr-2" />
                   Meldingen
                 </Button>
-                <Button variant="outline" className="w-full justify-start text-sm">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start text-sm"
+                  onClick={() => setShowPreferences(!showPreferences)}
+                >
                   <User className="h-4 w-4 mr-2" />
                   Mijn voorkeuren
                 </Button>
@@ -101,20 +148,41 @@ const Index = () => {
             {showPreferences && (
               <UserPreferences onClose={() => setShowPreferences(false)} />
             )}
+            
+            {showNotifications && (
+              <NotificationsPanel onClose={() => setShowNotifications(false)} />
+            )}
           </div>
 
           {/* Main content */}
           <div className="lg:col-span-3">
-            <ChatInterface onSearch={handleSearch} isSearching={isSearching} />
+            <ChatInterface 
+              onSearch={handleSearch} 
+              isSearching={isSearching}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
             
             {searchResults.length > 0 && (
               <div className="mt-8">
-                <SearchResults results={searchResults} />
+                <SearchResults 
+                  results={searchResults}
+                  onExternalLink={handleExternalLink}
+                  onShowDetails={handleShowDetails}
+                />
               </div>
             )}
           </div>
         </div>
       </main>
+
+      {selectedPartId && (
+        <PartDetailsModal
+          partId={selectedPartId}
+          onClose={() => setSelectedPartId(null)}
+          onExternalLink={handleExternalLink}
+        />
+      )}
 
       <Footer />
     </div>

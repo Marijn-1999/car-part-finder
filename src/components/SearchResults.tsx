@@ -17,9 +17,16 @@ interface SearchResult {
 
 interface SearchResultsProps {
   results: SearchResult[];
+  onExternalLink: (platform: string) => void;
+  onShowDetails: (partId: number) => void;
 }
 
-export const SearchResults = ({ results }: SearchResultsProps) => {
+export const SearchResults = ({ results, onExternalLink, onShowDetails }: SearchResultsProps) => {
+  const handleFavorite = (partId: number) => {
+    console.log(`Added part ${partId} to favorites`);
+    // Here you would typically save to favorites
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -46,7 +53,12 @@ export const SearchResults = ({ results }: SearchResultsProps) => {
                   <h4 className="font-semibold text-gray-900 text-lg leading-tight">
                     {result.title}
                   </h4>
-                  <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-500">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-gray-400 hover:text-red-500"
+                    onClick={() => handleFavorite(result.id)}
+                  >
                     <Heart className="h-4 w-4" />
                   </Button>
                 </div>
@@ -84,11 +96,18 @@ export const SearchResults = ({ results }: SearchResultsProps) => {
                 </div>
                 
                 <div className="flex gap-2">
-                  <Button className="bg-green-600 hover:bg-green-700 text-white">
+                  <Button 
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                    onClick={() => onExternalLink(result.platform)}
+                  >
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Bekijk op {result.platform}
                   </Button>
-                  <Button variant="outline" className="text-green-600 border-green-300">
+                  <Button 
+                    variant="outline" 
+                    className="text-green-600 border-green-300"
+                    onClick={() => onShowDetails(result.id)}
+                  >
                     Meer details
                   </Button>
                 </div>

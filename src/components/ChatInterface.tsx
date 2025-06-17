@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, MessageCircle, Search, Bell, Settings } from 'lucide-react';
 
 interface ChatMessage {
   id: number;
@@ -15,9 +15,11 @@ interface ChatMessage {
 interface ChatInterfaceProps {
   onSearch: (query: string) => void;
   isSearching: boolean;
+  activeTab: 'chat' | 'search';
+  onTabChange: (tab: 'chat' | 'search') => void;
 }
 
-export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => {
+export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 1,
@@ -59,6 +61,26 @@ export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => 
     if (e.key === 'Enter') {
       handleSendMessage();
     }
+  };
+
+  const handleQuickSearch = (query: string) => {
+    setCurrentMessage(query);
+    onSearch(query);
+  };
+
+  const handleTabClick = (tab: 'chat' | 'search') => {
+    onTabChange(tab);
+    console.log(`Switched to ${tab} mode`);
+  };
+
+  const handleNotificationsClick = () => {
+    console.log('Notifications clicked from chat interface');
+    // This could trigger a notification panel or toast
+  };
+
+  const handleSettingsClick = () => {
+    console.log('Settings clicked from chat interface');
+    // This could open settings panel
   };
 
   return (
@@ -115,7 +137,7 @@ export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => 
       </div>
 
       <div className="p-4 border-t bg-gray-50">
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-3">
           <Input
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
@@ -132,18 +154,74 @@ export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => 
             <Send className="h-4 w-4" />
           </Button>
         </div>
-        <div className="flex justify-center mt-3 gap-4">
-          <Button variant="outline" size="sm" className="text-green-600 border-green-300">
-            💬 Chat
+        
+        {/* Quick search suggestions */}
+        <div className="mb-3 text-xs text-gray-600">
+          <span className="font-medium">Snel zoeken:</span>
+          <div className="flex flex-wrap gap-1 mt-1">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="text-xs h-6"
+              onClick={() => handleQuickSearch("Ford Mustang remmen")}
+            >
+              Ford Mustang remmen
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="text-xs h-6"
+              onClick={() => handleQuickSearch("Porsche 911 onderdelen")}
+            >
+              Porsche 911 onderdelen
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="text-xs h-6"
+              onClick={() => handleQuickSearch("VW Kever bumper")}
+            >
+              VW Kever bumper
+            </Button>
+          </div>
+        </div>
+        
+        <div className="flex justify-center gap-4">
+          <Button 
+            variant={activeTab === 'chat' ? 'default' : 'outline'} 
+            size="sm" 
+            className={activeTab === 'chat' ? 'bg-green-600 text-white' : 'text-green-600 border-green-300'}
+            onClick={() => handleTabClick('chat')}
+          >
+            <MessageCircle className="h-4 w-4 mr-1" />
+            Chat
           </Button>
-          <Button variant="outline" size="sm" className="text-green-600 border-green-300">
-            🔍 Zoeken
+          <Button 
+            variant={activeTab === 'search' ? 'default' : 'outline'} 
+            size="sm" 
+            className={activeTab === 'search' ? 'bg-green-600 text-white' : 'text-green-600 border-green-300'}
+            onClick={() => handleTabClick('search')}
+          >
+            <Search className="h-4 w-4 mr-1" />
+            Zoeken
           </Button>
-          <Button variant="outline" size="sm" className="text-green-600 border-green-300">
-            📢 Meldingen
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="text-green-600 border-green-300"
+            onClick={handleNotificationsClick}
+          >
+            <Bell className="h-4 w-4 mr-1" />
+            Meldingen
           </Button>
-          <Button variant="outline" size="sm" className="text-green-600 border-green-300">
-            ⚙️ Instellingen
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="text-green-600 border-green-300"
+            onClick={handleSettingsClick}
+          >
+            <Settings className="h-4 w-4 mr-1" />
+            Instellingen
           </Button>
         </div>
       </div>
