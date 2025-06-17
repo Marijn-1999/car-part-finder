@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Send, Loader2, MessageCircle, Search, Bell, Settings } from 'lucide-react';
+import { Send, Loader2, MessageCircle, Search, Settings2 } from 'lucide-react';
+import { AdvancedSearchModal } from './AdvancedSearchModal';
 
 interface ChatMessage {
   id: number;
@@ -29,6 +30,7 @@ export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }:
     }
   ]);
   const [currentMessage, setCurrentMessage] = useState('');
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
   const handleSendMessage = () => {
     if (!currentMessage.trim()) return;
@@ -73,14 +75,11 @@ export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }:
     console.log(`Switched to ${tab} mode`);
   };
 
-  const handleNotificationsClick = () => {
-    console.log('Notifications clicked from chat interface');
-    // This could trigger a notification panel or toast
-  };
-
-  const handleSettingsClick = () => {
-    console.log('Settings clicked from chat interface');
-    // This could open settings panel
+  const handleAdvancedSearch = (searchData: any) => {
+    const query = `${searchData.part} voor ${searchData.brand} ${searchData.model} ${searchData.year}`;
+    setCurrentMessage(query);
+    onSearch(query);
+    setShowAdvancedSearch(false);
   };
 
   return (
@@ -153,6 +152,13 @@ export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }:
           >
             <Send className="h-4 w-4" />
           </Button>
+          <Button 
+            onClick={() => setShowAdvancedSearch(true)}
+            variant="outline"
+            className="text-green-600 border-green-300"
+          >
+            <Settings2 className="h-4 w-4" />
+          </Button>
         </div>
         
         {/* Quick search suggestions */}
@@ -205,26 +211,14 @@ export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }:
             <Search className="h-4 w-4 mr-1" />
             Zoeken
           </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="text-green-600 border-green-300"
-            onClick={handleNotificationsClick}
-          >
-            <Bell className="h-4 w-4 mr-1" />
-            Meldingen
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="text-green-600 border-green-300"
-            onClick={handleSettingsClick}
-          >
-            <Settings className="h-4 w-4 mr-1" />
-            Instellingen
-          </Button>
         </div>
       </div>
+
+      <AdvancedSearchModal
+        isOpen={showAdvancedSearch}
+        onClose={() => setShowAdvancedSearch(false)}
+        onSearch={handleAdvancedSearch}
+      />
     </Card>
   );
 };
