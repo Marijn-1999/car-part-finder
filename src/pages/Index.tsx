@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { ChatInterface } from '@/components/ChatInterface';
 import { SearchResults } from '@/components/SearchResults';
@@ -17,7 +16,6 @@ const Index = () => {
   const [selectedPartId, setSelectedPartId] = useState<number | null>(null);
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chat' | 'search'>('chat');
 
   const handleSearch = async (query: string) => {
     setIsSearching(true);
@@ -159,8 +157,6 @@ const Index = () => {
             <ChatInterface 
               onSearch={handleSearch} 
               isSearching={isSearching}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
             />
             
             {searchResults.length > 0 && (

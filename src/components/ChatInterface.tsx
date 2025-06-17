@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Send, Loader2, MessageCircle, Search, Settings2 } from 'lucide-react';
+import { Send, Loader2, Settings2 } from 'lucide-react';
 import { AdvancedSearchModal } from './AdvancedSearchModal';
 
 interface ChatMessage {
@@ -16,11 +16,9 @@ interface ChatMessage {
 interface ChatInterfaceProps {
   onSearch: (query: string) => void;
   isSearching: boolean;
-  activeTab: 'chat' | 'search';
-  onTabChange: (tab: 'chat' | 'search') => void;
 }
 
-export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }: ChatInterfaceProps) => {
+export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 1,
@@ -68,11 +66,6 @@ export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }:
   const handleQuickSearch = (query: string) => {
     setCurrentMessage(query);
     onSearch(query);
-  };
-
-  const handleTabClick = (tab: 'chat' | 'search') => {
-    onTabChange(tab);
-    console.log(`Switched to ${tab} mode`);
   };
 
   const handleAdvancedSearch = (searchData: any) => {
@@ -162,7 +155,7 @@ export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }:
         </div>
         
         {/* Quick search suggestions */}
-        <div className="mb-3 text-xs text-gray-600">
+        <div className="text-xs text-gray-600">
           <span className="font-medium">Snel zoeken:</span>
           <div className="flex flex-wrap gap-1 mt-1">
             <Button 
@@ -190,27 +183,6 @@ export const ChatInterface = ({ onSearch, isSearching, activeTab, onTabChange }:
               VW Kever bumper
             </Button>
           </div>
-        </div>
-        
-        <div className="flex justify-center gap-4">
-          <Button 
-            variant={activeTab === 'chat' ? 'default' : 'outline'} 
-            size="sm" 
-            className={activeTab === 'chat' ? 'bg-green-600 text-white' : 'text-green-600 border-green-300'}
-            onClick={() => handleTabClick('chat')}
-          >
-            <MessageCircle className="h-4 w-4 mr-1" />
-            Chat
-          </Button>
-          <Button 
-            variant={activeTab === 'search' ? 'default' : 'outline'} 
-            size="sm" 
-            className={activeTab === 'search' ? 'bg-green-600 text-white' : 'text-green-600 border-green-300'}
-            onClick={() => handleTabClick('search')}
-          >
-            <Search className="h-4 w-4 mr-1" />
-            Zoeken
-          </Button>
         </div>
       </div>
 
