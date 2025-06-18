@@ -16,36 +16,34 @@ interface ChatInterfaceProps {
   onSearch: (query: string) => void;
   isSearching: boolean;
 }
-
 async function fetchAssistantReply(message: string): Promise<string> {
-  const modelUrl = 'https://api-inference.huggingface.co/models/distilgpt2';
+  const modelUrl = 'https://api.awanllm.com/v1/chat/completions';
 
   try {
     const res = await fetch(modelUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer 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',  // Replace with your actual token
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ inputs: message }),
-    });
-
-    const text = await res.text();
+            method: "POST",
+            headers: {
+                Authorization: `Bearer c96134c7-c3c8-44f7-a56c-1a38eade2b87`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                model: "Meta-Llama-3-8B-Instruct",
+                messages: [{ role: "user", content: message }],
+            }),
+        });
 
     if (!res.ok) {
-      return `API error: ${text}`;
+      const errorText = await res.text();
+      return `API error: ${errorText}`;
     }
 
-    const data = JSON.parse(text);
-    return data[0]?.generated_text?.trim() || 'No response from model.';
-  } catch (err) {
-    console.error('Fetch error:', err);
+    const data = await res.json();
+    return data.choices[0]?.message.content || 'No response from model.';
+  } catch (error) {
+    console.error('Fetch error:', error);
     return 'Error fetching response from model.';
   }
-}
-
-
-
+} 
 
 export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
