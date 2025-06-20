@@ -16,21 +16,37 @@ interface ChatInterfaceProps {
   onSearch: (query: string) => void;
   isSearching: boolean;
 }
-async function fetchAssistantReply(message: string): Promise<string> {
+
+async function fetchAssistantReply(messages: ChatMessage[]): Promise<string> {
   const modelUrl = 'https://api.awanllm.com/v1/chat/completions';
+
+  const apiMessages = messages.map((msg) => ({
+    role: msg.type === 'user' ? 'user' : 'assistant',
+    content: msg.message,
+  }));
 
   try {
     const res = await fetch(modelUrl, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer c96134c7-c3c8-44f7-a56c-1a38eade2b87`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                model: "Meta-Llama-3-8B-Instruct",
-                messages: [{ role: "user", content: message }],
-            }),
-        });
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer c96134c7-c3c8-44f7-a56c-1a38eade2b87`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'Meta-Llama-3-8B-Instruct',
+        messages: [
+          {
+            role: 'system',
+            content: `Je bent een expert in klassieke auto-onderdelen. 
+Als iemand een bericht stuurt zoals:
+"Ik zoek een carburateur voor een Ford Mustang uit 1967", interpreteer het dan als een zoekopdracht.
+Geef een korte, duidelijke reactie en stel eventueel een vervolgvraag voor meer details.
+Vat het verzoek samen in de vorm: Zoek: [onderdeel] voor [merk] [model] ([jaar])`,
+          },
+          ...apiMessages,
+        ],
+      }),
+    });
 
     if (!res.ok) {
       const errorText = await res.text();
@@ -38,12 +54,12 @@ async function fetchAssistantReply(message: string): Promise<string> {
     }
 
     const data = await res.json();
-    return data.choices[0]?.message.content || 'No response from model.';
+    return data.choices[0]?.message.content || 'Geen antwoord ontvangen van het model.';
   } catch (error) {
     console.error('Fetch error:', error);
-    return 'Error fetching response from model.';
+    return 'Fout bij het ophalen van het antwoord van het model.';
   }
-} 
+}
 
 export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -68,10 +84,12 @@ export const ChatInterface = ({ onSearch, isSearching }: ChatInterfaceProps) => 
       timestamp: new Date(),
     };
 
+    // Voeg de gebruikersboodschap toe aan de chat
     setMessages((prev) => [...prev, userMessage]);
     onSearch(currentMessage);
 
-    const assistantReply = await fetchAssistantReply(currentMessage);
+    // Vraag het antwoord op met volledige chatgeschiedenis (inclusief net toegevoegde)
+    const assistantReply = await fetchAssistantReply([...messages, userMessage]);
 
     const assistantMessage: ChatMessage = {
       id: messages.length + 2,
