@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Send, Loader2, Settings2 } from 'lucide-react';
 import { AdvancedSearchModal } from './AdvancedSearchModal';
+const apiKey = import.meta.env.VITE_AWANLLM_API_KEY;
+
 
 interface ChatMessage {
   id: number;
@@ -29,7 +31,7 @@ async function fetchAssistantReply(messages: ChatMessage[]): Promise<string> {
     const res = await fetch(modelUrl, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer c96134c7-c3c8-44f7-a56c-1a38eade2b87`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
