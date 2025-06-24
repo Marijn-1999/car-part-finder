@@ -1,73 +1,110 @@
-# Welcome to your Lovable project
+ClassicParts Finder
+A focused web application that helps users discover classic car parts through an AI-driven chat interface. Built with React and TypeScript, enhanced by prompt engineering to deliver precise, context-aware search results from multiple platforms like Marktplaats and eBay. The app features a responsive UI with detailed part views and seller information, designed for classic car enthusiasts and restorers.
 
-## Project info
+Features
+AI-powered chat search tuned for classic auto parts using prompt engineering
 
-**URL**: https://lovable.dev/projects/41a08ec7-6221-4a5e-9c6c-9da2f39420f4
+Detailed modal views for parts including images, specs, seller ratings, and descriptions
 
-## How can I edit this code?
+Interactive UI with wishlist, external platform linking, and contact seller options
 
-There are several ways of editing your application.
+Defensive coding to handle incomplete or missing data gracefully
 
-**Use Lovable**
+Responsive layout with clean, component-based architecture
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/41a08ec7-6221-4a5e-9c6c-9da2f39420f4) and start prompting.
+Used Technologies
+Application Technologies
 
-Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Follow these steps:
+Development and Build Tools
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Installation
+Requirements:
+Node.js version 18 or newer
 
-**Edit a file directly in GitHub**
+npm or pnpm package manager
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Steps:
+Clone this repository and navigate to the project directory
 
-**Use GitHub Codespaces**
+Run npm install (or pnpm install) to install dependencies
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Start the development server with npm run dev
 
-## What technologies are used for this project?
+Open http://localhost:3000 in your browser to use the app
 
-This project is built with:
+Usage
+Use the chat interface to search for classic car parts by describing what you need. The AI will respond with relevant part options, complete with images and detailed specs.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Click on a part to open the detail modal, where you can:
 
-## How can I deploy this project?
+View multiple images and detailed specifications
 
-Simply open [Lovable](https://lovable.dev/projects/41a08ec7-6221-4a5e-9c6c-9da2f39420f4) and click on Share -> Publish.
+See seller info with ratings and membership duration
 
-## Can I connect a custom domain to my Lovable project?
+Contact the seller or add the part to your wishlist
 
-Yes, you can!
+Open the part listing directly on the original platform
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Project Structure Overview
+components/ – Reusable UI parts such as PartDetailsModal, buttons, and badges
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+pages/ – Main views including the chat and search interface
+
+utils/ – Helper functions, including prompt construction for AI queries
+
+types/ – TypeScript interfaces for strict typing of parts and seller data
+
+Styling is primarily handled with Tailwind CSS for rapid, responsive UI development, while icons come from the Lucide React library.
+
+Contributing
+Contributions are welcome! To contribute:
+
+Fork the repository
+
+Create a new branch (git checkout -b feature/your-feature)
+
+Make your changes with clear and descriptive commits
+
+Push your branch and open a pull request for review
+
+Please follow the existing code style and include meaningful commit messages.
+
+Troubleshooting / FAQ
+The part images or details don’t load
+Check that the part object passed to the modal is fully populated; the app uses optional chaining to avoid crashes when data is missing but incomplete data may affect display.
+
+The AI responses are too vague or generic
+This can often be improved by refining the prompt engineering in the utils/prompt.ts file to better constrain the AI’s context.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Changelog
+Version 1.0.0
+Initial release with AI-driven classic parts search
+
+Detailed part modal with images, specs, and seller info
+
+Prompt engineering to improve AI answer relevance
+
+Responsive, accessible UI built with React and Tailwind CSS
+
+Wishlist and contact seller interaction placeholders
+
+Educational Context
+Created as part of a learning project to explore integrating AI with modern web development, focusing on:
+
+Iterative development with prompt-based AI tuning
+
+Building resilient, user-friendly UI components in React
+
+Applying TypeScript for maintainability and reliability
+
+Documenting development processes and user guidance
